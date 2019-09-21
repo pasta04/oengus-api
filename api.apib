@@ -77,9 +77,12 @@ HOST: https://oengus.io
 + Response 201 (application/json)
 
 
-## 選考状態取得 [GET /api/marathon/selection?status=]
+## 選考状態取得 [GET /api/marathon/{marathonName}/selection?status=]
 
 * 選考状態を取得する。
+
++ Parameters
+    + marathonName: rtaij2019 (string, required) - マラソン名
 
 + Response 200 (application/json)
 
@@ -163,7 +166,7 @@ HOST: https://oengus.io
 ## Selection
 + categoryId: 24 (number) - カテゴリーID
 + id: 24 (number) - ゲームID
-+ status: BONUS (string) - 選考結果。当選：VALIDATED 選考中：TODO ボーナス：BONUS
++ status: BONUS (string) - 選考結果。当選：VALIDATED 落選：REJECTED 選考中：TODO ボーナス：BONUS
 
 ## Availabilities
 + from: `2019-09-22T18:58:52.000Z` 
