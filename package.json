@@ -1,0 +1,14 @@
+{
+  "name": "oengus-api",
+  "version": "1.0.0",
+  "description": "OengusのAPI説明",
+  "scripts": {
+    "debug": "aglio -i api.apib -s -p 3000",
+    "build": "aglio -i api.apib -o docs/index.html"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "aglio": "^2.3.0"
+  }
+}

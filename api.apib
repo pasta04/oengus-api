@@ -1,0 +1,170 @@
+FORMAT: 1A
+HOST: https://oengus.io
+
+# Oengus API
+
+# Group マラソン
+
+## 全マラソン情報取得 [GET /api/marathon/]
+
+* Oengusに登録されている全マラソン情報を取得する。
+
++ Response 200 (application/json)
+
+  + Attributes
+        + live (array[Marathon]) - 開催中のマラソン
+        + next (array[Marathon]) - 今後のマラソン
+        + open (array[Marathon]) - 応募受付中のマラソン
+
+## マラソン情報取得 [GET /api/marathon/{marathonName}]
+
+* 指定したマラソン情報を取得する。
+
++ Parameters
+    + marathonName: rtaij2019 - マラソン名
+
++ Response 200 (application/json)
+
+  + Attributes
+        + country: JP (string) - 国
+        + creator (User) - マラソン作成者
+        + defaultSetupTime: PT10M (string) - セットアップタイム
+        + description: ゲーム募集は9/14から9/29です (string) - マラソンの説明。改行が入ることもある。
+        + discord: xxxxxx (string) - Discord招待リンクの末尾ID。
+        + discordPrivacy: false (boolean) - Discordプライベート設定
+        + endDate: 2019-12-31T12:00:27Z (string) - マラソン終了日時
+        + hasMultiplayer: true (boolean) - 協力プレイ可否
+        + id: rtaij2019 (string) - マラソンID
+        + language: ja (string) - 言語
+        + location: 秋葉原ハンドレッドスクエア倶楽部 (string) - 開催場所
+        + maxCategoriesPerGame: 3 (number) - 応募可能なカテゴリー数(ゲームごと)
+        + maxGamesPerRunner: 5 (number) - 応募可能なゲーム数
+        + maxNumberOfScreens: 2 (number) - 画面数
+        + moderators (array[User]) - モデレータ一覧
+        + name: RTA in Japan 2019 (string) - マラソン名
+        + onsite: true (boolean) - オフラインかオンラインか
+        + scheduleDone: false (boolean)
+        + selectionDone: false (boolean) - ゲーム選考完了フラグ
+        + startDate: `2019-12-27T03:00:27Z` (string) - マラソン開始時刻
+        + submitsOpen: true (boolean) - 応募受付中
+        + twitch: rtainjapan (string) - マラソンに紐づくTwitchユーザ名
+        + twitter: rtainjapan (string) - マラソンに紐づくTwitterユーザ名
+
+## ゲーム情報 [GET /api/marathon/{marathonName}/game]
+
+* 応募された全てのゲームの情報を取得する。
+
++ Parameters
+    + marathonName: rtaij2019 (string, required) - マラソン名
+
++ Response 200 (application/json)
+    + Attributes (array, fixed-type)
+        + (Game)
+
+## ゲーム応募 [POST /api/marathon/{marathonName}/submission]
+
+* ゲームを応募する
+
++ Parameters
+    + marathonName: rtaij2019 (string, required) - マラソン名
+
++ Request (application/json)
+    + Attribute
+        + availabilities (array[Availabilities]) - 参加可能日時
+        + games (array[Game]) - ゲーム情報
+        + user (User) - ユーザ情報。初回は空オブジェクト
+
++ Response 201 (application/json)
+
+
+## 選考状態取得 [GET /api/marathon/selection?status=]
+
+* 選考状態を取得する。
+
++ Response 200 (application/json)
+
+  + Attributes
+        + *24* (Selection) - ゲームIDをkeyとした、選考結果。
+
+# Group ユーザ
+
+## ログイン中のユーザ情報 [GET /api/user/me]
+
++ Response 200 (application/json)
+    * 正常に取得
+
+    + Attributes (array, fixed-type)
+        + (LoginUser)
+
+# Group エラー
+
+## GETエラー [GET /]
+
+* 恐らくすべてのエンドポイントにおいて共通のエラー
+
++ Response 401 (application/json)
+    + Attributes
+        + error: Unauthorized (string) - エラー分類
+        + message: Access is denied (string) - エラーメッセージ
+        + path: /api/user/me (string) - APIパス
+        + status: 401  (number) - エラーコード
+        + timestamp: `2019-09-21T15:12:13.171+0000` (string) - リクエスト時刻
+
+
+# Data Structures
+## Marathon
++ country: JP (string) - 国
++ endDate: `2019-12-31T12:00:27Z` (string) - 終了時刻
++ id: rtaij2019 (string) - マラソンID
++ language: ja (string) - 言語
++ location: 秋葉原ハンドレッドスクエア倶楽部 (string) - 開催場所
++ name: RTA in Japan 2019 (string) - マラソン名
++ onsite: true (string) - オフラインかオンラインか
++ startDate: `2019-12-27T03:00:27Z` (string) - 開始時刻
+
+## LoginUser
++ discordId: 1234567890 (string)
++ discordName: RTAちゃん#7144 (string)
++ enabled: true (boolean)
++ id: 1 (number) - ユーザID
++ roles: ROLE_USER (array[string])
++ speedruncomName: srcusers1 (string) - Speedrun.comのユーザ名
++ twitchName: twitchusers1 (string) - Twitchのユーザ名
++ twitterName: twitteruser1 (string) - Twitterのユーザ名
++ username: users1 (string) - Oengusのユーザ名
++ usernameJapanese: ユーザ (string) - Oengus日本語表示でのユーザ名。未設定はnull
+
+## User
++ id: 1 (number) - ユーザID
++ roles: ROLE_USER (array[string])
++ speedruncomName: srcusers1 (string) - Speedrun.comのユーザ名
++ twitchName: twitchusers1 (string) - Twitchのユーザ名
++ twitterName: twitteruser1 (string) - Twitterのユーザ名
++ username: users1 (string) - Oengusのユーザ名
++ usernameJapanese: ユーザ (string) - Oengus日本語表示でのユーザ名。未設定はnull
+
+## Game
++ categories (array[Category], fixed-type) - ゲームのカテゴリ
++ console: PC (string) - ゲームハード
++ description: とにかくすごいゲームです。 (string) - ゲーム説明。改行が入ることもある。
++ emulated: false (boolean) - エミュレーター使用
++ id: 1 (number) - ゲームID
++ name: スゴイゲーム (string) - ゲーム名
++ ratio: 4:3 (string) - アスペクト比
++ user (User) - ユーザ情報
+
+## Category
++ description: 何でもいいから早くクリアします。 (string) - カテゴリ説明。改行が入ることもある。
++ estimate: PT1H40M (string) - 予定タイム
++ id: 1 (number) - カテゴリーID
++ name: Any% (string) - カテゴリ名
++ video: http://example.com/ (string) - 参考動画URL
+
+## Selection
++ categoryId: 24 (number) - カテゴリーID
++ id: 24 (number) - ゲームID
++ status: BONUS (string) - 選考結果。当選：VALIDATED 選考中：TODO ボーナス：BONUS
+
+## Availabilities
++ from: `2019-09-22T18:58:52.000Z` 
++ to: `2019-09-29T18:57:58.000Z`
